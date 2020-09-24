@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--    <link rel="stylesheet" href="./../static/css/loginstyle.css" th:href="@{css/loginstyle.css}">-->
+
+    <style>
+body {font-family: Arial,
+Helvetica, sans-serif;
+margin:0;
+}
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password],input[type=date],input[type=file] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+select{
+width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.modalDialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 99999;
+    opacity:0;
+    -webkit-transition: opacity 100ms ease-in;
+    -moz-transition: opacity 100ms ease-in;
+    transition: opacity 100ms ease-in;
+    pointer-events: none;
+}
+.modalDialog:target {
+    opacity:1;
+    pointer-events: auto;
+}
+.modalDialog > div {
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 3px;
+    background: #fff;
+}
+.close {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f26d7d;
+    color: #fff;
+    line-height: 25px;
+    position: absolute;
+    right: -12px;
+    text-align: center;
+    top: -10px;
+    width: 34px;
+    height: 34px;
+    text-decoration: none;
+    font-weight: bold;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;
+    padding-top: 5px;
+}
+.close:hover {
+    background: #fa3f6f;
+}
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div style="display:flex;justify-content: center;background-color:#333;">
+    <h2 style="color:white;"> Add Movie </h2>
+    <div style="display:flex;">
+        <button style="background-color:white;margin:5px;margin-left:300%;"><a href="#openModal-about" style="color:black;">Add Actor</a></button>
+        <button style="background-color:white; margin:5px;"><a href="#openModal-producer" style="color:black;">Add Producer</a></button>
+    </div>
+    </div>
+<br>
+
+<div style="display:flex;justify-content: center;">
+
+    <form action="/api/v1/movie/add" method="post" enctype="multipart/form-data" style="width:50%;">
+        <div class="container">
+            <label for="name"><b>Movie Name</b></label>
+            <input type="text" id="name" name="movie" placeholder="Enter movie name" required>
+
+            <label for="plot"><b>Movie Plot</b></label>
+            <input type="text" id="plot" name="plot" placeholder="Enter movie plot" required>
+
+            <label for="producer"><b>Movie Producer</b></label>
+            <select name="producer" id="producer" style="font-size:medium;">
+                <option>Select Producer</option>
+            </select>
+            <label for="releaseDate"><b>Release Date</b></label>
+            <input type="date" id="releaseDate" name="releaseDate" required>
+
+
+            <h3>Select Actors</h3>
+            <span id="checkbox"></span>
+
+
+            <br><br><label for="image"><b>Movie Poster</b></label>
+            <input type="file" name="image" id="image" placeholder="Enter poster of a movie" required>
+            <br>
+
+            <button type="submit">Submit</button>
+            <!--<label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>-->
+        </div>
+
+    </form>
+</div>
+
+
+<!--modals-->
+<div id="openModal-about" class="modalDialog">
+    <div>
+        <a href="#close" title="Close" class="close">X</a>
+
+
+        <div style="display:flex;justify-content: center;">
+
+            <form action="/api/v1/actor/add" method="post" style="width:50%;">
+                <h1 style="text-align:center;">Add Actor</h1>
+                <div class="container">
+                    <label for="name"><b>Actor Name</b></label>
+                    <input type="text" id="actorName" name="name" placeholder="Enter actor name" required>
+
+                    <label for="actorSex"><b>Sex</b></label>
+                    <input type="text" id="actorSex" name="sex" placeholder="Enter Sex" required>
+
+
+                    <label for="dob"><b>DOB</b></label>
+                    <input type="date" id="dob" name="dob" required>
+                    <br>
+
+                    <button type="submit">Submit</button>
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!--modals-->
+<div id="openModal-producer" class="modalDialog">
+    <div>
+        <a href="#close" title="Close" class="close">X</a>
+
+        <div style="display:flex;justify-content: center;">
+
+            <form action="/api/v1/producer/add" method="post" style="width:50%;">
+                <h1 style="text-align:center;">Add Producer</h1>
+                <div class="container">
+                    <label for="name"><b>Producer Name</b></label>
+                    <input type="text" id="producerName" name="name" placeholder="Enter producer name" required>
+
+                    <label for="producerSex"><b>Sex</b></label>
+                    <input type="text" id="producerSex" name="sex" placeholder="Enter Sex" required>
+                    <label for="producerBio"><b>Bio</b></label>
+                    <input type="text" id="producerBio" name="bio" placeholder="Enter bio" required>
+
+
+                    <label for="dobProducer"><b>DOB</b></label>
+                    <input type="date" id="dobProducer" name="dob" required>
+                    <br>
+
+                    <button type="submit">Submit</button>
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+      window.onload = function() {
+	$.ajax({
+				url : "api/v1/producer/get",
+				type : "get",
+				success : function(data) {
+
+
+                  for(var i=0;i<data.length;i++){
+                         $("#producer").append("<option value='"+data[i].name+"'>"+data[i].name+"</option>");
+                }
+
+				}
+
+			});
+			$.ajax({
+				url : "api/v1/actor/get",
+				type : "get",
+				success : function(data) {
+
+                  for(var i=0;i<data.length;i++){
+                         $("#checkbox").append("<input type='checkbox' id='actor' name='actor' value='"+data[i].name+"'><label for='actor'><b>"+data[i].name+"</b></label>");
+                }
+
+				}
+
+			});
+
+    };
+
+</script>
+
+</body>
+</html>
