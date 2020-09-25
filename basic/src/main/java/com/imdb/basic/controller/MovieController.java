@@ -1,7 +1,11 @@
 package com.imdb.basic.controller;
 
+import com.imdb.basic.dto.MovieDto;
+import com.imdb.basic.dto.UpdateMovieDto;
 import com.imdb.basic.model.Movie;
+import com.imdb.basic.service.ActorService;
 import com.imdb.basic.service.MovieService;
+import com.imdb.basic.service.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +24,15 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
+    @Autowired
+    private ActorService actorService;
+
+    @Autowired
+    private ProducerService producerService;
 
     @GetMapping("get")
     public List<Movie> getMovie() {
-      // List<Movie> movies = movieService.getMovies();
+        // List<Movie> movies = movieService.getMovies();
 
         return movieService.getMovies();
     }
@@ -38,8 +47,40 @@ public class MovieController {
             throws IOException, ParseException {
 
 
-       movieService.saveMovie(movie, releaseDate, plot, actor, producer, poster);
+        movieService.saveMovie(movie, releaseDate, plot, actor, producer, poster);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
+
+    @GetMapping("fetch")
+    public ResponseEntity<MovieDto> getMovieById(@RequestParam("id") Integer id) throws ParseException {
+
+        MovieDto movieDto = new MovieDto();
+
+        movieDto.setMovie(movieService.findById(id));
+        movieDto.setActors(actorService.getActors());
+        movieDto.setProducerList(producerService.getProducers());
+
+        return new ResponseEntity(movieDto, HttpStatus.OK);
+    }
+
+    @PostMapping("update")
+    public ResponseEntity update(@RequestParam("id") String id,
+                                 @RequestParam("movie") String movie,
+                                 @RequestParam("releaseDate") String releaseDate,
+                                 @RequestParam("plot") String plot,
+                                 @RequestParam("actor") String actor,
+                                 @RequestParam("producer") String producer,
+                                 @RequestParam(value = "image", required = false) MultipartFile poster)
+            throws IOException, ParseException {
+
+
+
+        UpdateMovieDto updateMovieDto =new UpdateMovieDto(id,movie,releaseDate,actor,plot,producer,poster);
+
+                        movieService.updateMovie(updateMovieDto);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

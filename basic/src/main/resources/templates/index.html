@@ -64,7 +64,132 @@ margin: 5px;
     height: min-content;
     margin-top: 5px;
 }
+.button {
+  background-color: #454c45;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+<!---->
 
+
+button:hover {
+  opacity: 0.8;
+}
+
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.modalDialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 99999;
+    opacity:0;
+    -webkit-transition: opacity 100ms ease-in;
+    -moz-transition: opacity 100ms ease-in;
+    transition: opacity 100ms ease-in;
+    pointer-events: none;
+}
+.modalDialog:target {
+    opacity:1;
+    pointer-events: auto;
+}
+.modalDialog > div {
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 3px;
+    background: #fff;
+}
+.close {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f26d7d;
+    color: #fff;
+    line-height: 25px;
+    position: absolute;
+    right: -12px;
+    text-align: center;
+    top: -10px;
+    width: 34px;
+    height: 34px;
+    text-decoration: none;
+    font-weight: bold;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;
+    padding-top: 5px;
+}
+.close:hover {
+    background: #fa3f6f;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
 
 
     </style>
@@ -74,15 +199,14 @@ margin: 5px;
 <div class="topnav">
 
     <div class="centerStyle">
-    <a class="active" href="#home" id="logo">IMDb</a>
+        <a class="active" href="#home" id="logo">IMDb</a>
 
-    <form>
-        <input type="search" class="search" style="margin:5px;" placeholder="Search IMDb">
-        <button class="search" style="color:black;margin:5px; ">IMDb</button>
-    </form>
-        <button class="addMovie"><a href="/movie"  style="color:black;">Add A Movie</a></button>
+        <form>
+            <input type="search" class="search" style="margin:5px;" placeholder="Search IMDb">
+            <button class="search" style="color:black;margin:5px; ">IMDb</button>
+        </form>
+        <button class="addMovie"><a href="/movie" style="color:black;">Add A Movie</a></button>
     </div>
-
 
 
 </div>
@@ -97,6 +221,69 @@ margin: 5px;
 
 </section>
 
+<!--modals-->
+<div id="openModal-movieEdit" class="modalDialog">
+    <div>
+        <a href="#close" title="Close" class="close">X</a>
+
+        <div style="display:flex;justify-content: center;">
+
+            <form action="/api/v1/movie/update" method="post" enctype="multipart/form-data" style="width:100%;">
+                <div class="container">
+                    <h1 style="text-align:center;background-color: dimgrey;color: white;">Edit Movie</h1>
+                    <table>
+
+                        <tr>
+                            <td>Movie Name</td>
+                            <td><input type="text" id="name" name="movie" placeholder="Enter movie name" required></td>
+                        </tr>
+                        <tr>
+                            <td>Movie Plot</td>
+                            <td><input type="text" id="plot" name="plot" placeholder="Enter movie plot" required></td>
+                        </tr>
+                        <tr>
+                            <td>Movie Producer</td>
+                            <td>
+                                <select name="producer" id="producer" style="font-size:medium;">
+                                    <option>Select Producer</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Release Date</td>
+                            <td><input type="date" id="releaseDate" name="releaseDate" required></td>
+                        </tr>
+                        <tr>
+                            <td>Select Actors</td>
+                            <td><span id="checkbox"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Movie Poster</td>
+                            <td><input type="file" name="image" id="image" placeholder="Enter poster of a movie"
+                                       required><br></td>
+                        </tr>
+
+
+                        <tr>
+                          <td><input type="hidden" name="id" id="id"></td>
+                        </tr>
+
+                        <tr>
+                           <td colspan="2"> <button style="margin-left:40%;">Submit</button></td>
+                        </tr>
+
+                        <!--<label>
+                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                        </label>-->
+                    </table>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script>
 
       window.onload = function() {
@@ -109,8 +296,8 @@ margin: 5px;
                         for(var i=0;i<data.length;i++){
 
                             var code="<div style=background-color:white;text-align:center; >"
-                            console.log(data[i].name)
-                           code+='<h1>'+data[i].name+' ('+data[i].yearOfRelease+')</h1>'
+                                    let releaseDateFormat =data[i].yearOfRelease.split('-');
+                           code+='<h1>'+data[i].name+' ('+releaseDateFormat[0]+')</h1>'
                            code+='<img src='+data[i].posterUrl+'>'
                            code+='<p class=dynamicDiv>'+data[i].plot+'</p>'
                            code+='<h4 class=dynamicDiv>Producer: '+data[i].producer.name+'</h4>'
@@ -122,7 +309,7 @@ margin: 5px;
                                 actors+=data[i].actor[j].name+','
                          }
                            code+='<h4 class=dynamicDiv>Stars: '+actors.replace(/,\s*$/, '')+'</h4>'
-
+                           code+='<div style=display:flex><button class=button onclick="getData('+data[i].id+')"><a href="#openModal-movieEdit" style="color:white;">Edit</a></button></div>'
                         code+="</div>";
 
                         $("#movie").append(code);
@@ -134,6 +321,46 @@ margin: 5px;
     };
 
 
+
+
+</script>
+<script>
+
+function getData(id) {
+
+            $.ajax({
+				url : "api/v1/movie/fetch",
+				type : "get",
+				data:{"id":id},
+				success : function(data) {
+                console.log(data);
+                $("#id").val(data.movie.id);
+                $("#name").val(data.movie.name);
+                $("#plot").val(data.movie.plot);
+
+                var dateParts = data.movie.yearOfRelease.split("-");
+
+               /* if(parseInt(dateParts[1])<10){
+                dateParts[1] ="0"+dateParts[1];
+                }
+                if(parseInt(dateParts[0])<10){
+                dateParts[0] ="0"+dateParts[0];
+                }*/
+
+                $("#releaseDate").val(dateParts[0]+"-"+dateParts[1]+"-"+dateParts[2]);
+
+                 for(var i=0;i<data.producerList.length;i++){
+                         $("#producer").append("<option value='"+data.producerList[i].name+"'>"+data.producerList[i].name+"</option>");
+                }
+
+                for(var i=0;i<data.actors.length;i++){
+                         $("#checkbox").append("<input type='checkbox' id='actor' name='actor' value='"+data.actors[i].name+"'><label for='actor'><b>"+data.actors[i].name+"</b></label>");
+                }
+
+				}//success function close
+
+			});
+          }
 
 </script>
 

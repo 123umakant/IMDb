@@ -1,36 +1,39 @@
 package com.imdb.basic.dto;
 
-import java.util.Date;
+import com.imdb.basic.model.Actor;
+import com.imdb.basic.model.Movie;
+import com.imdb.basic.model.Producer;
+
+import java.util.List;
+import java.util.Optional;
 
 public class MovieDto {
 
-    private String movie;
-    private Date releaseDate;
-    private String plot;
+    private Optional<Movie> movie;
+    private List<Producer> producerList;
+    private List<Actor> actors;
 
-
-    public String getMovie() {
+    public Optional<Movie> getMovie() {
         return movie;
     }
 
-    public void setMovie(String movie) {
+    public void setMovie(Optional<Movie> movie) {
         this.movie = movie;
     }
 
-    public Date getReleaseDate() {
-        return releaseDate;
+    public List<Producer> getProducerList() {
+        return producerList;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setProducerList(List<Producer> producerList) {
+        this.producerList = producerList;
     }
 
-    public String getPlot() {
-        return plot;
+    public List<Actor> getActors() {
+        return actors;
     }
 
-    public void setPlot(String plot) {
-        this.plot = plot;
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
-
 }

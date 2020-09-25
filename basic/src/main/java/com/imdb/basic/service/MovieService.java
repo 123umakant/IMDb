@@ -2,6 +2,7 @@ package com.imdb.basic.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.imdb.basic.dto.UpdateMovieDto;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.model.Movie;
 import com.imdb.basic.model.Producer;
@@ -17,10 +18,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class MovieService {
+
+    private final int POSTER_NAME=3;
 
     @Autowired
     private AmazonS3 amazonS3;
@@ -76,5 +80,51 @@ public class MovieService {
 
     public List<Movie> getMovies() {
         return movieRepository.findAll();
+    }
+
+    public Optional<Movie> findById(Integer id) {
+
+       return movieRepository.findById(id);
+    }
+
+    public void updateMovie(UpdateMovieDto updateMovieDto) throws IOException {
+
+     Integer movieId =Integer.parseInt(updateMovieDto.getId());
+
+       Optional<Movie> movie = movieRepository.findById(movieId);
+
+       movie.get().setName(updateMovieDto.getMovie());
+       movie.get().setPlot(updateMovieDto.getPlot());
+       movie.get().setYearOfRelease(updateMovieDto.getReleaseDate());
+
+        String[] posterName = movie.get().getPosterUrl().split("/");
+
+        amazonS3.deleteObject(bucketName,posterName[POSTER_NAME]);
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(updateMovieDto.getPoster().getSize());
+        amazonS3.putObject(bucketName, updateMovieDto.getPoster().getOriginalFilename(), updateMovieDto.getPoster().getInputStream(), metadata);
+        String posterUrl = amazonS3.getUrl(bucketName, updateMovieDto.getPoster().getOriginalFilename()).toString();
+
+        movie.get().setPosterUrl(posterUrl);
+        Producer producerDb = producerRepository.findByname(updateMovieDto.getProducer());
+        movie.get().setProducer(producerDb);
+
+        String[] actors = updateMovieDto.getActor().split(",");
+
+        Set<Actor> actorSet = new HashSet<>();
+
+        for (int i = 0; i < actors.length; i++) {
+
+            String actorName = actors[i];
+
+            Actor dbActor = actorRepository.findByname(actorName);
+            actorSet.add(dbActor);
+
+        }
+        movie.get().setActor(actorSet);
+
+        movieRepository.save(movie.get());
+
     }
 }
