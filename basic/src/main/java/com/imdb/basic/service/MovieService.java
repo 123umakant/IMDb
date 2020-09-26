@@ -5,10 +5,12 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.imdb.basic.dto.UpdateMovieDto;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.model.Movie;
+import com.imdb.basic.model.MovieCache;
 import com.imdb.basic.model.Producer;
 import com.imdb.basic.repository.ActorRepository;
 import com.imdb.basic.repository.MovieRepository;
 import com.imdb.basic.repository.ProducerRepository;
+import com.imdb.basic.repository.repositoryImp.MovieCacheImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,11 +43,14 @@ public class MovieService {
     @Autowired
     private ProducerRepository producerRepository;
 
+    @Autowired
+    private MovieCacheImpl movieCacheRepo;
 
     public void saveMovie(String movieName, String releaseDate, String plot, String actor,
                           String producer, MultipartFile poster) throws ParseException, IOException {
 
         Movie movie = new Movie();
+
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(poster.getSize());
@@ -73,6 +78,15 @@ public class MovieService {
         movie.setActor(actorSet);
         movie.setProducer(producerDb);
         movie.setPosterUrl(posterUrl);
+
+        MovieCache movieCache = new MovieCache();
+
+
+        movieCache.setId(movieCacheRepo.getKey().size()+1);
+        movieCache.setName(movieName);
+        movieCache.setPlot(plot);
+        movieCache.setYearOfRelease(releaseDate);
+        movieCacheRepo.save(movieCache);
 
         movieRepository.save(movie);
 

@@ -3,6 +3,7 @@ package com.imdb.basic.controller;
 import com.imdb.basic.dto.MovieDto;
 import com.imdb.basic.dto.UpdateMovieDto;
 import com.imdb.basic.model.Movie;
+import com.imdb.basic.repository.repositoryImp.MovieCacheImpl;
 import com.imdb.basic.service.ActorService;
 import com.imdb.basic.service.MovieService;
 import com.imdb.basic.service.ProducerService;
@@ -30,10 +31,13 @@ public class MovieController {
     @Autowired
     private ProducerService producerService;
 
+    @Autowired
+    private MovieCacheImpl movieCache;
+
     @GetMapping("get")
     public List<Movie> getMovie() {
         // List<Movie> movies = movieService.getMovies();
-
+        System.out.println(movieCache.findAll());
         return movieService.getMovies();
     }
 
