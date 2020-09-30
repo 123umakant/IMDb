@@ -35,5 +35,4 @@ public class ProducerController {
         producerService.addProducer(producerDto);
     return new ResponseEntity(HttpStatus.CREATED);
     }
-
 }

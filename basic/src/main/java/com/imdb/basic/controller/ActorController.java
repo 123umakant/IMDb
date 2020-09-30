@@ -1,6 +1,7 @@
 package com.imdb.basic.controller;
 
 import com.imdb.basic.dto.ActorDto;
+import com.imdb.basic.exception.ApiRequestException;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,13 @@ public class ActorController {
     public ResponseEntity addActor(@RequestParam("name") String name, @RequestParam("sex") String sex,
                                    @RequestParam("dob") String dob) {
 
-        ActorDto actorDto =new ActorDto();
+
+        ActorDto actorDto = new ActorDto();
         actorDto.setName(name);
         actorDto.setDob(dob);
         actorDto.setSex(sex);
-
         actorService.addActor(actorDto);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
-
 }

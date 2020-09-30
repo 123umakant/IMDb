@@ -3,6 +3,7 @@ package com.imdb.basic.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.imdb.basic.dto.UpdateMovieDto;
+import com.imdb.basic.exception.ApiRequestException;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.model.Movie;
 import com.imdb.basic.model.MovieCache;
@@ -26,7 +27,7 @@ import java.util.Set;
 @Service
 public class MovieService {
 
-    private final int POSTER_NAME=3;
+    private final int POSTER_NAME = 3;
 
     @Autowired
     private AmazonS3 amazonS3;
@@ -51,45 +52,43 @@ public class MovieService {
 
         Movie movie = new Movie();
 
-
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(poster.getSize());
         amazonS3.putObject(bucketName, poster.getOriginalFilename(), poster.getInputStream(), metadata);
         String posterUrl = amazonS3.getUrl(bucketName, poster.getOriginalFilename()).toString();
 
         String[] actors = actor.split(",");
-
         Set<Actor> actorSet = new HashSet<>();
-
         for (int i = 0; i < actors.length; i++) {
 
             String actorName = actors[i];
-
-            Actor dbActor = actorRepository.findByname(actorName);
-            actorSet.add(dbActor);
-
+            Optional<Actor> dbActor = actorRepository.findByname(actorName);
+            actorSet.add(dbActor.get());
         }
 
-        Producer producerDb = producerRepository.findByname(producer);
+       Optional<Producer> producerDb = producerRepository.findByname(producer);
 
         movie.setYearOfRelease(releaseDate);
         movie.setName(movieName);
         movie.setPlot(plot);
         movie.setActor(actorSet);
-        movie.setProducer(producerDb);
+        movie.setProducer(producerDb.get());
         movie.setPosterUrl(posterUrl);
 
         MovieCache movieCache = new MovieCache();
 
-
-        movieCache.setId(movieCacheRepo.getKey().size()+1);
+        movieCache.setId(movieCacheRepo.getKey().size() + 1);
         movieCache.setName(movieName);
         movieCache.setPlot(plot);
         movieCache.setYearOfRelease(releaseDate);
+
+        Optional<Movie> verifyMovie  = movieRepository.findByname(movieName);
+
+        if (verifyMovie.get()!=null)
+            throw new ApiRequestException("Movie is Already Present");
+
         movieCacheRepo.save(movieCache);
-
         movieRepository.save(movie);
-
     }
 
     public List<Movie> getMovies() {
@@ -98,22 +97,22 @@ public class MovieService {
 
     public Optional<Movie> findById(Integer id) {
 
-       return movieRepository.findById(id);
+        return movieRepository.findById(id);
     }
 
     public void updateMovie(UpdateMovieDto updateMovieDto) throws IOException {
 
-     Integer movieId =Integer.parseInt(updateMovieDto.getId());
+        Integer movieId = Integer.parseInt(updateMovieDto.getId());
 
-       Optional<Movie> movie = movieRepository.findById(movieId);
+        Optional<Movie> movie = movieRepository.findById(movieId);
 
-       movie.get().setName(updateMovieDto.getMovie());
-       movie.get().setPlot(updateMovieDto.getPlot());
-       movie.get().setYearOfRelease(updateMovieDto.getReleaseDate());
+        movie.get().setName(updateMovieDto.getMovie());
+        movie.get().setPlot(updateMovieDto.getPlot());
+        movie.get().setYearOfRelease(updateMovieDto.getReleaseDate());
 
         String[] posterName = movie.get().getPosterUrl().split("/");
 
-        amazonS3.deleteObject(bucketName,posterName[POSTER_NAME]);
+        amazonS3.deleteObject(bucketName, posterName[POSTER_NAME]);
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(updateMovieDto.getPoster().getSize());
@@ -121,8 +120,8 @@ public class MovieService {
         String posterUrl = amazonS3.getUrl(bucketName, updateMovieDto.getPoster().getOriginalFilename()).toString();
 
         movie.get().setPosterUrl(posterUrl);
-        Producer producerDb = producerRepository.findByname(updateMovieDto.getProducer());
-        movie.get().setProducer(producerDb);
+        Optional<Producer> producerDb = producerRepository.findByname(updateMovieDto.getProducer());
+        movie.get().setProducer(producerDb.get());
 
         String[] actors = updateMovieDto.getActor().split(",");
 
@@ -132,8 +131,9 @@ public class MovieService {
 
             String actorName = actors[i];
 
-            Actor dbActor = actorRepository.findByname(actorName);
-            actorSet.add(dbActor);
+            Optional<Actor> dbActor = actorRepository.findByname(actorName);
+
+            actorSet.add(dbActor.get());
 
         }
         movie.get().setActor(actorSet);

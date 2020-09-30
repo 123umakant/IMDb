@@ -7,6 +7,8 @@ import com.imdb.basic.repository.repositoryImp.MovieCacheImpl;
 import com.imdb.basic.service.ActorService;
 import com.imdb.basic.service.MovieService;
 import com.imdb.basic.service.ProducerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,9 @@ public class MovieController {
 
     @GetMapping("get")
     public List<Movie> getMovie() {
-        // List<Movie> movies = movieService.getMovies();
-        System.out.println(movieCache.findAll());
+
+        Logger logger = (Logger) LoggerFactory.getLogger(MovieController.class);
+        logger.info(movieCache.findAll().toString());
         return movieService.getMovies();
     }
 
@@ -49,7 +52,6 @@ public class MovieController {
                                       @RequestParam("producer") String producer,
                                       @RequestParam(value = "image", required = false) MultipartFile poster)
             throws IOException, ParseException {
-
 
         movieService.saveMovie(movie, releaseDate, plot, actor, producer, poster);
 
@@ -78,13 +80,8 @@ public class MovieController {
                                  @RequestParam(value = "image", required = false) MultipartFile poster)
             throws IOException, ParseException {
 
-
-
-        UpdateMovieDto updateMovieDto =new UpdateMovieDto(id,movie,releaseDate,actor,plot,producer,poster);
-
-                        movieService.updateMovie(updateMovieDto);
-
+        UpdateMovieDto updateMovieDto = new UpdateMovieDto(id, movie, releaseDate, actor, plot, producer, poster);
+        movieService.updateMovie(updateMovieDto);
         return new ResponseEntity(HttpStatus.OK);
     }
-
 }

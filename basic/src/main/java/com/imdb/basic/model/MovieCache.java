@@ -10,7 +10,6 @@ public class MovieCache implements Serializable {
     private String plot;
 
     public MovieCache() {
-
     }
 
     public MovieCache(Integer id, String name, String yearOfRelease, String plot, String posterUrl) {
