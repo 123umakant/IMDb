@@ -76,9 +76,9 @@ public class MovieControllerTest {
     public void testGetMovieById() throws Exception {
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("http://localhost:8080/api/v1/movie/fetch")
+                MockMvcRequestBuilders.get("http://localhost:8080/api/v1/movie/fetch/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "1")
+
         )
                 .andExpect(status().isOk());
     }

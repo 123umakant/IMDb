@@ -59,8 +59,8 @@ public class MovieController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    @GetMapping("fetch")
-    public ResponseEntity<MovieDto> getMovieById(@RequestParam("id") String id) throws ParseException {
+    @RequestMapping(path = "/fetch/{id}",method = RequestMethod.GET)
+    public ResponseEntity<MovieDto> getMovieById(@PathVariable final String id) throws ParseException {
 
         MovieDto movieDto = new MovieDto();
 

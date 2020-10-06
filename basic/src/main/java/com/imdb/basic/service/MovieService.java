@@ -6,7 +6,6 @@ import com.imdb.basic.dto.UpdateMovieDto;
 import com.imdb.basic.exception.ApiRequestException;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.model.Movie;
-import com.imdb.basic.model.MovieCache;
 import com.imdb.basic.model.Producer;
 import com.imdb.basic.repository.ActorRepository;
 import com.imdb.basic.repository.MovieRepository;

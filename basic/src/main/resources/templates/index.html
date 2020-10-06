@@ -335,16 +335,11 @@ tr:nth-child(even) {
 function getData(id) {
 
             $.ajax({
-				url : "api/v1/movie/fetch",
+				url : "api/v1/movie/fetch/1",
 				type : "get",
-				data:{"id":id},
 				success : function(data) {
 
                 console.log(data);
-
-
-
-
 
                 $("#id").val(data.movie.id);
                 $("#name").val(data.movie.name);
