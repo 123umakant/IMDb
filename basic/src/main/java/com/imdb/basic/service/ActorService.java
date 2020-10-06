@@ -4,8 +4,6 @@ import com.imdb.basic.dto.ActorDto;
 import com.imdb.basic.exception.ApiRequestException;
 import com.imdb.basic.model.Actor;
 import com.imdb.basic.repository.ActorRepository;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +17,16 @@ public class ActorService {
     private ActorRepository actorRepository;
 
     public void addActor(ActorDto actorDto) {
+
         Actor actor = new Actor();
         actor.setName(actorDto.getName());
         actor.setSex(actorDto.getSex());
         actor.setDob(actorDto.getDob());
 
-      Optional<Actor> verifyActor= actorRepository.findByname(actorDto.getName());
-      if (verifyActor.get()!=null)
-          throw new ApiRequestException("Actor is Already Present");
+        Optional<Actor> verifyActor = actorRepository.findByname(actorDto.getName());
+
+        if (verifyActor.isPresent())
+            throw new ApiRequestException("Actor is Already Present");
 
         actorRepository.save(actor);
     }

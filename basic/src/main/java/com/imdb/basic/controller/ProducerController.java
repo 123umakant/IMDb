@@ -17,21 +17,15 @@ public class ProducerController {
     @Autowired
     private ProducerService producerService;
 
-    @GetMapping("get")
+    @GetMapping("/producers")
     public ResponseEntity<Producer> getProducers(){
       List<Producer> producers = producerService.getProducers();
     return new ResponseEntity(producers,HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addProducer(@RequestParam("name") String name, @RequestParam("sex") String sex,
-                                      @RequestParam("dob") String dob,@RequestParam("bio") String bio){
-        ProducerDto producerDto = new ProducerDto();
+    @PostMapping("/save")
+    public ResponseEntity addProducer(@RequestBody ProducerDto producerDto){
 
-        producerDto.setBio(bio);
-        producerDto.setDob(dob);
-        producerDto.setName(name);
-        producerDto.setSex(sex);
         producerService.addProducer(producerDto);
     return new ResponseEntity(HttpStatus.CREATED);
     }

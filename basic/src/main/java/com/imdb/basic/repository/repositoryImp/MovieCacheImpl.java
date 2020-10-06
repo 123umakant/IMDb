@@ -27,7 +27,7 @@ public class MovieCacheImpl implements MovieCacheRepo {
 
     @Override
     public Set getKey() {
-       return hashOperations.keys(REDIS_CACHE_KEY);
+        return hashOperations.keys(REDIS_CACHE_KEY);
     }
 
     @Override

@@ -72,8 +72,18 @@ public class MovieService {
         movie.setName(movieName);
         movie.setPlot(plot);
         movie.setActor(actorSet);
-        movie.setProducer(producerDb.get());
+        if (producerDb.isPresent()==true && producerDb.get() !=null) {
+            movie.setProducer(producerDb.get());
+        }else{
+            throw new ApiRequestException("Producer is not present");
+        }
+
         movie.setPosterUrl(posterUrl);
+
+        Optional<Movie> verifyMovie  = movieRepository.findByname(movieName);
+
+        if (verifyMovie.isPresent())
+            throw new ApiRequestException("Movie is Already Present");
 
         MovieCache movieCache = new MovieCache();
 
@@ -82,13 +92,8 @@ public class MovieService {
         movieCache.setPlot(plot);
         movieCache.setYearOfRelease(releaseDate);
 
-        Optional<Movie> verifyMovie  = movieRepository.findByname(movieName);
-
-        if (verifyMovie.get()!=null)
-            throw new ApiRequestException("Movie is Already Present");
-
-        movieCacheRepo.save(movieCache);
         movieRepository.save(movie);
+
     }
 
     public List<Movie> getMovies() {
@@ -105,6 +110,8 @@ public class MovieService {
         Integer movieId = Integer.parseInt(updateMovieDto.getId());
 
         Optional<Movie> movie = movieRepository.findById(movieId);
+        if (movie.isPresent()==false && movie.get() ==null)
+        throw new ApiRequestException("Movie is not present");
 
         movie.get().setName(updateMovieDto.getMovie());
         movie.get().setPlot(updateMovieDto.getPlot());
@@ -121,6 +128,10 @@ public class MovieService {
 
         movie.get().setPosterUrl(posterUrl);
         Optional<Producer> producerDb = producerRepository.findByname(updateMovieDto.getProducer());
+
+        if (producerDb.isPresent()==false && producerDb.get() ==null)
+            throw new ApiRequestException("Producer is not present");
+
         movie.get().setProducer(producerDb.get());
 
         String[] actors = updateMovieDto.getActor().split(",");
@@ -132,6 +143,9 @@ public class MovieService {
             String actorName = actors[i];
 
             Optional<Actor> dbActor = actorRepository.findByname(actorName);
+
+            if(dbActor.isPresent()==false && dbActor.get() ==null)
+            throw new ApiRequestException("Actor is not present");
 
             actorSet.add(dbActor.get());
 

@@ -25,11 +25,11 @@ public class ProducerService {
         producer.setBio(producerDto.getBio());
         producer.setDob(producerDto.getDob());
 
-       Optional<Producer> verifyProducer = producerRepository.findByname(producerDto.getName());
-       if (verifyProducer.get()!=null)
-           throw new ApiRequestException("Producer is already present");
+        Optional<Producer> verifyProducer = producerRepository.findByname(producerDto.getName());
+        if (verifyProducer.isPresent())
+            throw new ApiRequestException("Producer is already present");
 
-       producerRepository.save(producer);
+        producerRepository.save(producer);
     }
 
     public List<Producer> getProducers() {

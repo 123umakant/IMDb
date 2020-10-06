@@ -28,4 +28,5 @@ public class ActorDto {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
 }

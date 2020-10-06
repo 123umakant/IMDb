@@ -156,7 +156,7 @@ span.psw {
 
 <div style="display:flex;justify-content: center;">
 
-    <form action="/api/v1/movie/add" method="post" enctype="multipart/form-data" style="width:50%;">
+    <form action="/api/v1/movie/save" method="post" enctype="multipart/form-data" style="width:50%;">
         <div class="container">
             <label for="name"><b>Movie Name</b></label>
             <input type="text" id="name" name="movie" placeholder="Enter movie name" required>
@@ -180,7 +180,7 @@ span.psw {
             <input type="file" name="image" id="image" placeholder="Enter poster of a movie" required>
             <br>
 
-            <button type="submit">Submit</button>
+            <button type="submit" >Submit</button>
             <!--<label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
             </label>-->
@@ -198,7 +198,8 @@ span.psw {
 
         <div style="display:flex;justify-content: center;">
 
-            <form action="/api/v1/actor/add" method="post" style="width:50%;">
+            <!--<form action="/api/v1/actor/add" method="post" style="width:50%;">-->
+            <form action="#">
                 <h1 style="text-align:center;">Add Actor</h1>
                 <div class="container">
                     <label for="name"><b>Actor Name</b></label>
@@ -212,7 +213,7 @@ span.psw {
                     <input type="date" id="dob" name="dob" required>
                     <br>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit" onclick="saveActor(event)">Submit</button>
 
                 </div>
 
@@ -229,7 +230,7 @@ span.psw {
 
         <div style="display:flex;justify-content: center;">
 
-            <form action="/api/v1/producer/add" method="post" style="width:50%;">
+            <form  style="width:50%;">
                 <h1 style="text-align:center;">Add Producer</h1>
                 <div class="container">
                     <label for="name"><b>Producer Name</b></label>
@@ -241,11 +242,11 @@ span.psw {
                     <input type="text" id="producerBio" name="bio" placeholder="Enter bio" required>
 
 
-                    <label for="dobProducer"><b>DOB</b></label>
-                    <input type="date" id="dobProducer" name="dob" required>
+                    <label for="producerDob"><b>DOB</b></label>
+                    <input type="date" id="producerDob" name="dob" required>
                     <br>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit" onclick="saveProducer(event)">Submit</button>
 
                 </div>
 
@@ -259,7 +260,7 @@ span.psw {
 
       window.onload = function() {
 	$.ajax({
-				url : "api/v1/producer/get",
+				url : "api/v1/producer/producers",
 				type : "get",
 				success : function(data) {
 
@@ -272,7 +273,7 @@ span.psw {
 
 			});
 			$.ajax({
-				url : "api/v1/actor/get",
+				url : "api/v1/actor/actors",
 				type : "get",
 				success : function(data) {
 
@@ -287,6 +288,57 @@ span.psw {
     };
 
 </script>
+<script>
+    function saveActor(event){
+
+        event.preventDefault();
+
+        let name = $('#actorName').val();
+        let sex = $('#actorSex').val();
+       let dob =  $('#dob').val();
+
+       	$.ajax({
+				url : "api/v1/actor/save",
+				type : "post",
+				dataType: 'json',
+                contentType: 'application/json',
+				data: JSON.stringify({'name':name,'sex':sex,'dob':dob}),
+				success : function(data) {
+                          console.log(data);
+				}
+
+			});
+    }
+
+</script>
+
+<script>
+    function saveProducer(event){
+
+        event.preventDefault();
+
+        let name = $('#producerName').val();
+        let sex = $('#producerSex').val();
+       let dob =  $('#producerDob').val();
+       let bio =  $('#producerBio').val();
+
+
+
+       	$.ajax({
+				url : "api/v1/producer/save",
+				type : "post",
+				dataType: 'json',
+                contentType: 'application/json',
+				data: JSON.stringify({'name':name,'sex':sex,'bio':bio,'dob':dob}),
+				success : function(data) {
+                          console.log(data);
+				}
+
+			});
+    }
+
+</script>
+
 
 </body>
 </html>

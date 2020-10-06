@@ -36,15 +36,16 @@ public class MovieController {
     @Autowired
     private MovieCacheImpl movieCache;
 
-    @GetMapping("get")
+    @GetMapping("/movies")
     public List<Movie> getMovie() {
 
         Logger logger = (Logger) LoggerFactory.getLogger(MovieController.class);
+
         logger.info(movieCache.findAll().toString());
         return movieService.getMovies();
     }
 
-    @PostMapping("/add")
+    @PostMapping("/save")
     public ResponseEntity createMovie(@RequestParam("movie") String movie,
                                       @RequestParam("releaseDate") String releaseDate,
                                       @RequestParam("plot") String plot,
@@ -59,18 +60,18 @@ public class MovieController {
     }
 
     @GetMapping("fetch")
-    public ResponseEntity<MovieDto> getMovieById(@RequestParam("id") Integer id) throws ParseException {
+    public ResponseEntity<MovieDto> getMovieById(@RequestParam("id") String id) throws ParseException {
 
         MovieDto movieDto = new MovieDto();
 
-        movieDto.setMovie(movieService.findById(id));
+        movieDto.setMovie(movieService.findById(Integer.parseInt(id)));
         movieDto.setActors(actorService.getActors());
         movieDto.setProducerList(producerService.getProducers());
 
         return new ResponseEntity(movieDto, HttpStatus.OK);
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public ResponseEntity update(@RequestParam("id") String id,
                                  @RequestParam("movie") String movie,
                                  @RequestParam("releaseDate") String releaseDate,
