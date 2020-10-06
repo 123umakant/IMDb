@@ -1,7 +1,7 @@
 package com.imdb.basic.repository;
 
 
-import com.imdb.basic.model.MovieCache;
+import com.imdb.basic.model.Movie;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,13 +10,13 @@ public interface MovieCacheRepo {
 
     Set getKey();
 
-    void save(MovieCache movie);
+    void save(Movie movie);
 
-    Map<String, MovieCache> findAll();
+    Map<String, Movie> findAll();
 
-    void update(MovieCache movie);
+    void update(Movie movie);
 
     void delete(Integer id);
 
-    MovieCache findById(Integer id);
+    Movie findById(Integer id);
 }

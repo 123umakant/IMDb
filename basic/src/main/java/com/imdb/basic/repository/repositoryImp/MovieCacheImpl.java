@@ -1,7 +1,6 @@
 package com.imdb.basic.repository.repositoryImp;
 
 import com.imdb.basic.model.Movie;
-import com.imdb.basic.model.MovieCache;
 import com.imdb.basic.repository.MovieCacheRepo;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,18 +30,18 @@ public class MovieCacheImpl implements MovieCacheRepo {
     }
 
     @Override
-    public void save(MovieCache movie) {
+    public void save(Movie movie) {
 
         hashOperations.put(REDIS_CACHE_KEY, movie.getId(), movie);
     }
 
     @Override
-    public Map<String, MovieCache> findAll() {
+    public Map<String, Movie> findAll() {
         return hashOperations.entries(REDIS_CACHE_KEY);
     }
 
     @Override
-    public void update(MovieCache movie) {
+    public void update(Movie movie) {
         save(movie);
     }
 
@@ -52,7 +51,7 @@ public class MovieCacheImpl implements MovieCacheRepo {
     }
 
     @Override
-    public MovieCache findById(Integer id) {
-        return (MovieCache) hashOperations.get(REDIS_CACHE_KEY, id);
+    public Movie findById(Integer id) {
+        return (Movie) hashOperations.get(REDIS_CACHE_KEY, id);
     }
 }

@@ -85,12 +85,8 @@ public class MovieService {
         if (verifyMovie.isPresent())
             throw new ApiRequestException("Movie is Already Present");
 
-        MovieCache movieCache = new MovieCache();
-
-        movieCache.setId(movieCacheRepo.getKey().size() + 1);
-        movieCache.setName(movieName);
-        movieCache.setPlot(plot);
-        movieCache.setYearOfRelease(releaseDate);
+        movie.setId(movieCacheRepo.getKey().size() + 1);
+        movieCacheRepo.save(movie);
 
         movieRepository.save(movie);
 
