@@ -18,15 +18,16 @@ public class ProducerController {
     private ProducerService producerService;
 
     @GetMapping("/producers")
-    public ResponseEntity<Producer> getProducers(){
-      List<Producer> producers = producerService.getProducers();
-    return new ResponseEntity(producers,HttpStatus.OK);
+    public ResponseEntity<Producer> getProducers() {
+
+        List<Producer> producers = producerService.getProducers();
+        return new ResponseEntity(producers, HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public ResponseEntity addProducer(@RequestBody ProducerDto producerDto){
+    public ResponseEntity addProducer(@RequestBody ProducerDto producerDto) {
 
         producerService.addProducer(producerDto);
-    return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

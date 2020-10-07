@@ -12,9 +12,10 @@ public class RedisConfiguration {
     JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
     }
+
     @Bean
-    RedisTemplate<String, Movie> redisTemplate(){
-        RedisTemplate<String,Movie> redisTemplate = new RedisTemplate<String, Movie>();
+    RedisTemplate<String, Movie> redisTemplate() {
+        RedisTemplate<String, Movie> redisTemplate = new RedisTemplate<String, Movie>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
         return redisTemplate;
     }

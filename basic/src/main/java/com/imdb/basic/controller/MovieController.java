@@ -1,7 +1,7 @@
 package com.imdb.basic.controller;
 
 import com.imdb.basic.dto.MovieDto;
-import com.imdb.basic.dto.UpdateMovieDto;
+import com.imdb.basic.dto.MovieRequestDto;
 import com.imdb.basic.model.Movie;
 import com.imdb.basic.repository.repositoryImp.MovieCacheImpl;
 import com.imdb.basic.service.ActorService;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -40,26 +39,22 @@ public class MovieController {
     public List<Movie> getMovie() {
 
         Logger logger = (Logger) LoggerFactory.getLogger(MovieController.class);
-
         logger.info(movieCache.findAll().toString());
+
         return movieService.getMovies();
     }
 
-    @PostMapping("/save")
-    public ResponseEntity createMovie(@RequestParam("movie") String movie,
-                                      @RequestParam("releaseDate") String releaseDate,
-                                      @RequestParam("plot") String plot,
-                                      @RequestParam("actor") String actor,
-                                      @RequestParam("producer") String producer,
-                                      @RequestParam(value = "image", required = false) MultipartFile poster)
+
+    @RequestMapping(path = "/save", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity createMovie(@ModelAttribute MovieRequestDto movieRequestDto)
             throws IOException, ParseException {
 
-        movieService.saveMovie(movie, releaseDate, plot, actor, producer, poster);
+        movieService.saveMovie(movieRequestDto);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/fetch/{id}",method = RequestMethod.GET)
+    @RequestMapping(path = "/fetch/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDto> getMovieById(@PathVariable final String id) throws ParseException {
 
         MovieDto movieDto = new MovieDto();
@@ -71,18 +66,11 @@ public class MovieController {
         return new ResponseEntity(movieDto, HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity update(@RequestParam("id") String id,
-                                 @RequestParam("movie") String movie,
-                                 @RequestParam("releaseDate") String releaseDate,
-                                 @RequestParam("plot") String plot,
-                                 @RequestParam("actor") String actor,
-                                 @RequestParam("producer") String producer,
-                                 @RequestParam(value = "image", required = false) MultipartFile poster)
+    @RequestMapping(path = "/update", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity update(@ModelAttribute MovieRequestDto movieRequestDto)
             throws IOException, ParseException {
 
-        UpdateMovieDto updateMovieDto = new UpdateMovieDto(id, movie, releaseDate, actor, plot, producer, poster);
-        movieService.updateMovie(updateMovieDto);
+        movieService.updateMovie(movieRequestDto);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
