@@ -2,6 +2,7 @@ package com.imdb.basic.controller;
 
 import com.imdb.basic.dto.MovieDto;
 import com.imdb.basic.dto.MovieRequestDto;
+import com.imdb.basic.exception.ApiRequestException;
 import com.imdb.basic.model.Movie;
 import com.imdb.basic.repository.repositoryImp.MovieCacheImpl;
 import com.imdb.basic.service.ActorService;
@@ -56,6 +57,9 @@ public class MovieController {
 
     @RequestMapping(path = "/fetch/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDto> getMovieById(@PathVariable final String id) throws ParseException {
+
+        if(!movieService.findById(Integer.parseInt(id)).isPresent())
+            throw new ApiRequestException("User not found");
 
         MovieDto movieDto = new MovieDto();
 
