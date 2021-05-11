@@ -17,25 +17,17 @@ public class ActorController {
     @Autowired
     private ActorService actorService;
 
-    @GetMapping("get")
+    @GetMapping("/actors")
     public ResponseEntity<Actor> getActors() {
 
         List<Actor> actors = actorService.getActors();
         return new ResponseEntity(actors, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addActor(@RequestParam("name") String name, @RequestParam("sex") String sex,
-                                   @RequestParam("dob") String dob) {
-
-        ActorDto actorDto =new ActorDto();
-        actorDto.setName(name);
-        actorDto.setDob(dob);
-        actorDto.setSex(sex);
+    @PostMapping("save")
+    public ResponseEntity addActor(@RequestBody ActorDto actorDto) {
 
         actorService.addActor(actorDto);
-
         return new ResponseEntity(HttpStatus.CREATED);
     }
-
 }

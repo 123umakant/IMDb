@@ -192,6 +192,7 @@ tr:nth-child(even) {
 }
 
 
+
     </style>
 </head>
 <body>
@@ -265,11 +266,13 @@ tr:nth-child(even) {
 
 
                         <tr>
-                          <td><input type="hidden" name="id" id="id"></td>
+                            <td><input type="hidden" name="id" id="id"></td>
                         </tr>
 
                         <tr>
-                           <td colspan="2"> <button style="margin-left:40%;">Submit</button></td>
+                            <td colspan="2">
+                                <button style="margin-left:40%;">Submit</button>
+                            </td>
                         </tr>
 
                         <!--<label>
@@ -286,9 +289,11 @@ tr:nth-child(even) {
 
 <script>
 
+
+
       window.onload = function() {
 	$.ajax({
-				url : "api/v1/movie/get",
+				url : "api/v1/movie/movies",
 				type : "get",
 				success : function(data) {
 
@@ -323,17 +328,19 @@ tr:nth-child(even) {
 
 
 
+
 </script>
 <script>
 
 function getData(id) {
 
             $.ajax({
-				url : "api/v1/movie/fetch",
+				url : "api/v1/movie/fetch/1",
 				type : "get",
-				data:{"id":id},
 				success : function(data) {
+
                 console.log(data);
+
                 $("#id").val(data.movie.id);
                 $("#name").val(data.movie.name);
                 $("#plot").val(data.movie.plot);
@@ -361,6 +368,7 @@ function getData(id) {
 
 			});
           }
+
 
 </script>
 

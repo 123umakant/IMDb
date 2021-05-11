@@ -2,29 +2,14 @@ package com.imdb.basic.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class UpdateMovieDto {
-
+public class MovieRequestDto {
     private String id;
     private String movie;
     private String releaseDate;
     private String actor;
-    private String plot;
     private String producer;
     private MultipartFile poster;
-
-    public UpdateMovieDto() {
-
-    }
-
-    public UpdateMovieDto(String id, String movie, String releaseDate, String actor, String plot, String producer, MultipartFile poster) {
-        this.id = id;
-        this.movie = movie;
-        this.releaseDate = releaseDate;
-        this.actor = actor;
-        this.plot = plot;
-        this.producer = producer;
-        this.poster = poster;
-    }
+    private String plot;
 
     public String getId() {
         return id;
@@ -32,6 +17,14 @@ public class UpdateMovieDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+        this.plot = plot;
     }
 
     public String getMovie() {
@@ -56,14 +49,6 @@ public class UpdateMovieDto {
 
     public void setActor(String actor) {
         this.actor = actor;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public void setPlot(String plot) {
-        this.plot = plot;
     }
 
     public String getProducer() {
